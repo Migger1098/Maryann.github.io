@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine, Maryann?</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Dancing Script', cursive;
+    color: white;
+    text-align: center;
+    background-color: black;
+  }
+
+  h1, h2, button { z-index: 3; font-family: 'Dancing Script', cursive; }
+
+  h1 { font-size: 3.2rem; margin-bottom: 15px; }
+  h2 { font-size: 1.8rem; margin-bottom: 35px; color: #ffd6ff; }
+
+  button {
+    padding: 16px 32px;
+    font-size: 1.4rem;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: 'Dancing Script', cursive;
+  }
+
+  #yes { background-color: #ff5fa2; color: white; margin-right: 20px; }
+  #no { background-color: #555; color: white; position: absolute; }
+
+  /* PARALLAX STARS */
+  .star { position: absolute; width: 2px; height: 2px; background: white; opacity: 0.8; animation: twinkle 3s infinite ease-in-out; }
+  .far { transform: scale(0.6); opacity: 0.5; }
+  .mid { transform: scale(1); }
+  .near { transform: scale(1.4); opacity: 1; }
+
+  @keyframes twinkle { 0%,100% {opacity:0.3;} 50% {opacity:1;} }
+
+  /* CINNAMOROLL IMAGE */
+  .cinnamoroll {
+    position: absolute;
+    top: 65%; /* below text */
+    left: -200px;
+    width: 120px;
+    animation: drift1 45s linear infinite;
+    z-index: 2;
+  }
+  @keyframes drift1 { from { left: -200px; } to { left: 110%; } }
+
+  /* 3D SHOOTING STARS WITH TAILS (light purple) */
+  .shooting-star {
+    position: absolute;
+    width: 100px; /* tail length */
+    height: 2px;
+    background: linear-gradient(90deg, #d8b4ff 0%, rgba(216,180,255,0) 100%); /* light purple */
+    border-radius: 50%;
+    z-index: 4;
+    opacity: 1;
+  }
+
+  /* HEART FIREWORK PARTICLE */
+  .heart {
+    position: absolute;
+    font-size: 24px;
+    color: #ff4da6;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  /* FLOATING WORDS */
+  .floating-word {
+    position: absolute;
+    font-size: 28px;
+    font-weight: bold;
+    color: #ff7bff;
+    opacity: 1;
+    z-index: 5;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating character -->
+<img src="https://www.kindpng.com/picc/m/45-455286_cinnamoroll-png-transparent-png.png"
+     alt="Cinnamoroll"
+     class="cinnamoroll">
+
+<div id="content">
+  <h1>Maryann 🌙</h1>
+  <h2>Out of all the stars in the universe,<br>you’re my favorite one ✨</h2>
+  <h1>Will you be my Valentine? 💖</h1>
+  <div>
+    <button id="yes">Yes 🌹</button>
+    <button id="no">No 🥀</button>
+  </div>
+</div>
+
+<script>
+const yesButton = document.getElementById("yes");
+const noButton = document.getElementById("no");
+
+// Words to float
+const words = ["Pooks","Best Pussy Ever", "Pookie Bear", "Honeybun", "Great Pumpkin", "Cielo", "💖", "✨"];
+
+// YES button click
+yesButton.addEventListener("click", () => {
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+
+  // Shooting stars
+  for (let i = 0; i < 100; i++) createShootingStarWithTail();
+
+  // Heart fireworks in heart shape
+  for (let i = 0; i < 100; i++) createHeart(centerX, centerY, i/100);
+
+  // Floating words
+  for (let i = 0; i < 20; i++) createFloatingWord();
+
+  // Fade out main content
+  const content = document.getElementById("content");
+  content.style.transition = "opacity 1s";
+  content.style.opacity = 0;
+
+  setTimeout(() => {
+    const successDiv = document.createElement("div");
+    successDiv.style.position = "absolute";
+    successDiv.style.zIndex = "6";
+    successDiv.style.textAlign = "center";
+    successDiv.innerHTML = `
+      <h1>🌌 Mission Successful 💘</h1>
+      <h2>Maryann, you are my entire universe ✨</h2>
+      <h2>Happy Valentine’s Day Honeybun! 💖</h2>
+    `;
+    document.body.appendChild(successDiv);
+  }, 1500);
+});
+
+// NO button hover
+noButton.addEventListener("mouseover", () => {
+  noButton.style.left = Math.random()*(window.innerWidth-140)+"px";
+  noButton.style.top = Math.random()*(window.innerHeight-70)+"px";
+});
+
+// Shooting stars
+function createShootingStarWithTail() {
+  const star = document.createElement("div");
+  star.className = "shooting-star";
+
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  star.style.left = centerX + "px";
+  star.style.top = centerY + "px";
+
+  document.body.appendChild(star);
+
+  const endX = Math.random() * window.innerWidth;
+  const endY = Math.random() * window.innerHeight;
+
+  const dx = endX - centerX;
+  const dy = endY - centerY;
+  const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+  star.style.transform = `rotate(${angle}deg)`;
+
+  const duration = Math.random() * 1000 + 1200;
+  star.animate([
+    { left: centerX + "px", top: centerY + "px", opacity: 1 },
+    { left: endX + "px", top: endY + "px", opacity: 0 }
+  ], {
+    duration: duration,
+    easing: "ease-out",
+    fill: "forwards"
+  });
+
+  setTimeout(() => star.remove(), duration);
+}
+
+// Parallax stars
+const layers=["far","mid","near"];
+for(let i=0;i<180;i++){
+  const star = document.createElement("div");
+  star.className = "star " + layers[Math.floor(Math.random()*3)];
+  star.style.left=Math.random()*window.innerWidth+"px";
+  star.style.top=Math.random()*window.innerHeight+"px";
+  star.style.animationDuration=(Math.random()*3+2)+"s";
+  document.body.appendChild(star);
+}
+
+// Heart fireworks
+function createHeart(centerX, centerY, t) {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "💖";
+  document.body.appendChild(heart);
+
+  const scale = 15 + Math.random() * 10;
+  const angle = t * 2 * Math.PI;
+  const x = 16*Math.pow(Math.sin(angle),3);
+  const y = - (13*Math.cos(angle) - 5*Math.cos(2*angle) - 2*Math.cos(3*angle) - Math.cos(4*angle));
+
+  heart.style.left = centerX + "px";
+  heart.style.top = centerY + "px";
+
+  heart.animate([
+    { transform: `translate(0px, 0px) scale(1)`, opacity: 1 },
+    { transform: `translate(${x*scale}px, ${y*scale}px) scale(0.5)`, opacity: 0 }
+  ], {
+    duration: 1500 + Math.random()*500,
+    easing: "ease-out",
+    fill: "forwards"
+  });
+
+  setTimeout(() => heart.remove(), 2000);
+}
+
+// Floating words
+function createFloatingWord() {
+  const wordDiv = document.createElement("div");
+  wordDiv.className = "floating-word";
+  wordDiv.textContent = words[Math.floor(Math.random()*words.length)];
+
+  const startX = Math.random() * window.innerWidth;
+  const startY = window.innerHeight + 30; // start below screen
+  wordDiv.style.left = startX + "px";
+  wordDiv.style.top = startY + "px";
+
+  document.body.appendChild(wordDiv);
+
+  const endY = startY - (150 + Math.random() * 150);
+
+  wordDiv.animate([
+    { transform: `translateY(0px)`, opacity: 1 },
+    { transform: `translateY(${endY - startY}px)`, opacity: 0 }
+  ], {
+    duration: 9000 + Math.random()*1000,
+    easing: "ease-out",
+    fill: "forwards"
+  });
+
+  setTimeout(() => wordDiv.remove(), 10000);
+}
+</script>
+
+</body>
+</html>
